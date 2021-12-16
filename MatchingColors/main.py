@@ -1,4 +1,6 @@
+from RGBColour import RGBColour
 
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    myRgb = RGBColour(112, 108, 77)
+    print(myRgb.convertRGBtoLab())
 
