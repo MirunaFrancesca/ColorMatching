@@ -1,5 +1,4 @@
 from random import random, randint
-
 from RGBColour import RGBColour
 
 
@@ -8,6 +7,7 @@ class Controller:
         self.__inFilename = inFilename
         self.__colours = []
         self.__matches = {}
+        self.__similarMainColors = {}
         self.__palette = {
             "red": RGBColour(255, 0, 0),
             "orange": RGBColour(255, 127, 0),
@@ -48,7 +48,7 @@ class Controller:
 
 
     def getSimilarBasicColour(self, rgbColour):
-        minColourDistance = 20
+        minColourDistance = 100
         similarBasicColour = []
         labColour = rgbColour.convertRGBtoLab()
         for colour in self.__palette.keys():
@@ -63,30 +63,45 @@ class Controller:
 
         return similarBasicColour
 
+
+    def getSimilarMainColors(self):
+        for colour in self.__colours:
+            self.__similarMainColors[colour] = self.getSimilarBasicColour(colour)
+
+
     def findClosestComplimentaryColours(self, colour):
         complimentaryColour = colour.getComplimentaryColor()
         similarComplimentaryBasicColour = self.getSimilarBasicColour(complimentaryColour)
         allComplimentaryColours = []
         for colour in self.__colours:
-            if self.getSimilarBasicColour(colour) == similarComplimentaryBasicColour:
+            if self.__similarMainColors[colour] == similarComplimentaryBasicColour:
                 allComplimentaryColours.append(colour)
 
-        return allComplimentaryColours
+        return allComplimentaryColours, similarComplimentaryBasicColour
 
 
     def matchColours(self):
+        self.getSimilarMainColors()
         for colour in self.__colours:
-            self.__matches[colour] = self.findClosestComplimentaryColours(colour)
+            matches, mainComplimenataryColor = self.findClosestComplimentaryColours(colour)
+            self.__matches[colour] = matches
+
+    def buildMatchPair(self):
+        pairs = []
+        for colour in self.__matches.keys():
+            for matchingColour in self.__matches[colour]:
+                if [matchingColour, colour]  not in pairs:
+                    pairs.append([colour, matchingColour])
+        return pairs
 
 
     def writeToFile(self, outFilename):
+        pairs = self.buildMatchPair()
         outFile = open(outFilename, "w")
         toPrint = ""
-        for colour in self.__matches.keys():
-            toPrint += "Colour " + str(colour) + " has the following matches:\n"
-            for matchingColour in self.__matches[colour]:
-                toPrint += str(matchingColour) + " "
-            toPrint += "\n"
+        for pair in pairs:
+            toPrint += "shade of " + str(self.__similarMainColors[pair[0]][0]) + ": " + str(pair[0]) +\
+                       " + shade of " + str(self.__similarMainColors[pair[1]][0]) + ": " + str(pair[1]) + "\n"
 
         outFile.write(toPrint)
         outFile.close()
