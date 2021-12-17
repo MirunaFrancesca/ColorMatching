@@ -1,6 +1,11 @@
+from Controller import Controller
 from RGBColour import RGBColour
 
+
 if __name__ == '__main__':
-    myRgb = RGBColour(112, 108, 77)
-    print(myRgb.convertRGBtoLab())
+    myController = Controller("Colours.in")
+    myController.readFromFile()
+    myController.matchColours()
+    myController.writeToFile("Colours.out")
+
 

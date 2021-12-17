@@ -6,6 +6,8 @@ class RGBColour:
         self.__green = green
         self.__blue = blue
 
+    def __str__(self):
+        return "RGB( " + str(self.getRed()) + ", " + str(self.getGreen()) + ", " + str(self.getBlue()) + ")"
 
     def getComplimentaryColor(self):
         complimentaryRed = 255 - self.__red
@@ -58,13 +60,13 @@ class RGBColour:
     def setBlue(self, blue):
         self.__blue = blue
 
-    def getRed(self, red):
+    def getRed(self):
         return self.__red
 
-    def getGreen(self, green):
+    def getGreen(self):
         return self.__green
 
-    def getBlue(self, blue):
+    def getBlue(self):
         return self.__blue
 
 
