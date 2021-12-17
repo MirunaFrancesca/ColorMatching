@@ -1,3 +1,5 @@
+from random import random, randint
+
 from RGBColour import RGBColour
 
 
@@ -14,7 +16,7 @@ class Controller:
             "blue": RGBColour(0, 0, 255),
             "indigo": RGBColour(75, 0, 130),
             "violet": RGBColour(148, 0, 211),
-            "pink": RGBColour(255, 192, 203),
+            "pink": RGBColour(255, 102, 178),
             "brown": RGBColour(150, 75, 0),
             "gray": RGBColour(128, 128, 128),
             "black": RGBColour(255, 255, 255),
@@ -23,19 +25,30 @@ class Controller:
 
 
     def readFromFile(self):
-        faFile = open(self.__inFilename, "r")
-        lines = faFile.readlines()
+        coloursFile = open(self.__inFilename, "r")
+        lines = coloursFile.readlines()
 
         for line in lines:
             if line != "\n":
                 r, g, b = line.split()
                 self.__colours.append(RGBColour(int(r), int(g), int(b)))
 
-        faFile.close()
+        coloursFile.close()
+
+
+    def generateRandomRGBValues(self):
+        coloursFile = open(self.__inFilename, "w")
+        toPrint = ""
+        for counter in range(50):
+            for colour in range(3):
+                toPrint += str(randint(0, 250)) + " "
+            toPrint += "\n"
+        coloursFile.write(toPrint)
+        coloursFile.close()
 
 
     def getSimilarBasicColour(self, rgbColour):
-        minColourDistance = 100
+        minColourDistance = 20
         similarBasicColour = []
         labColour = rgbColour.convertRGBtoLab()
         for colour in self.__palette.keys():
@@ -44,8 +57,9 @@ class Controller:
             if currentColourDistance < minColourDistance:
                 similarBasicColour = [colour]
                 minColourDistance = currentColourDistance
-            if currentColourDistance == minColourDistance:
-                similarBasicColour.append(colour)
+            else:
+                if currentColourDistance == minColourDistance:
+                    similarBasicColour.append(colour)
 
         return similarBasicColour
 

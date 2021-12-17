@@ -1,3 +1,5 @@
+from cmath import sqrt
+
 from colormath.color_objects import LabColor
 from colormath.color_diff import delta_e_cie1976
 
@@ -17,6 +19,10 @@ class LabColour:
         color1 = LabColor(lab_l=self.getL(), lab_a=self.getA(), lab_b=self.getB())
         color2 = LabColor(lab_l=otherColour.getL(), lab_a=otherColour.getA(), lab_b=otherColour.getB())
         delta_e = delta_e_cie1976(color1, color2)
+        # deltaL = self.getL() - otherColour.getL()
+        # deltaA = self.getA() - otherColour.getA()
+        # deltaB = self.getB() - otherColour.getB()
+        # delta_e = sqrt(pow(deltaL, 2) + pow(deltaA, 2) + pow(deltaB, 2))
         return delta_e
 
     def setL(self, L):
